@@ -29,4 +29,4 @@ jobs:
     - name: Test
       run: | 
             ls -al
-            jsontogo sample.json
+            ./jsontogo sample.json
