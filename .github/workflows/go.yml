@@ -19,14 +19,38 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.20'
+        go-version: '1.23'
 
     - name: Build
-      run: |
-            go build -o jsontogo main.go
-            ls -al
+      run: go build -o jsontogo main.go
 
-    - name: Test
-      run: | 
-            ls -al
-            ./jsontogo sample.json
+    - name: Test sample
+      run: ./jsontogo sample.json
+
+    - name: Run json-to-go using stdin
+      shell: bash
+      run: |
+        set -eEuo pipefail
+        got=$(./jsontogo < tests/double-nested-objects.json)
+        exp=$(cat tests/double-nested-objects.go)
+        echo "got: '${got}'"
+        [[ "${got}" == "${exp}" ]]
+
+    - name: Run json-to-go with a file
+      shell: bash
+      run: |
+        set -eEuo pipefail
+        got=$(./jsontogo tests/double-nested-objects.json)
+        exp=$(cat tests/double-nested-objects.go)
+        echo "got: '${got}'"
+        [[ "${got}" == "${exp}" ]]
+
+    - name: Check correct error handling using stdin
+      shell: bash
+      run: |
+        ! ./jsontogo <<< "error"
+
+    - name: Check correct error handling with a file
+      shell: bash
+      run: |
+        ! ./jsontogo <(echo "error")
