@@ -1,6 +1,6 @@
 # JSON-to-Go, converts JSON to a Go struct
 
-Based on original code from ["JSON-to-Go"](https://github.com/mholt/json-to-go) from [Matt Holt](https://github.com/mholt)
+Based on original code in javascript from ["JSON-to-Go"](https://github.com/mholt/json-to-go) from [Matt Holt](https://github.com/mholt)
 
 Translates JSON into a Go type definition. 
 
