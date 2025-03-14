@@ -31,8 +31,7 @@ jobs:
       shell: bash
       run: |
         set -eEuo pipefail
-        ls -al ./jsontogo tests/double-nested-objects.json
-        got=$(./jsontogo < tests/double-nested-objects.json)
+        got=$(cat tests/double-nested-objects.json | ./jsontogo)
         exp=$(cat tests/double-nested-objects.go)
         echo "got: '${got}'"
         [[ "${got}" == "${exp}" ]]
