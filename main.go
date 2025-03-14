@@ -499,7 +499,7 @@ func parseStruct(depth, innerTabs int, scope map[string]interface{}, omitempty m
 			if allOmitempty || (omitempty != nil && omitempty[key] == true) {
 				appender(",omitempty")
 			}
-			appender("\"\n")
+			appender("\"`\n")
 		}
 		innerTabs--
 		// indenter for innerTabs
@@ -542,7 +542,7 @@ func parseStruct(depth, innerTabs int, scope map[string]interface{}, omitempty m
 					// do nothing for objects
 				}
 			}
-			appendFunc("\"\n")
+			appendFunc("\"`\n")
 		}
 		tabs--
 		indent(tabs)
@@ -627,32 +627,34 @@ func main() {
 			log.Fatal(fmt.Printf("Unexpected argument %s received\n", val))
 		}
 	}
+	var input string
+
 	// Read from file if filename is provided.
 	if filename != "" {
-		jsonBytes, err := os.ReadFile(filename)
+		buff, err := os.ReadFile(filename)
 		if err != nil {
 			log.Fatal(fmt.Println(err))
 		}
-		output := jsonToGo(string(jsonBytes), "", true, false, false)
-		if output.Error != "" {
-			log.Fatal(fmt.Println(output.Error))
+		input = string(buff)
+	} else {
+		// Otherwise, read from stdin.
+		buff := bytes.Buffer{}
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			buff.WriteString(scanner.Text())
 		}
-		fmt.Print(output.Go)
-		return
+		input = buff.String()
 	}
-	// Otherwise, read from stdin.
-	bufs := bytes.Buffer{}
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		bufs.WriteString(scanner.Text())
-	}
-	output := jsonToGo(bufs.String(), "", true, false, false)
+	// convert json to go struct
+	output := jsonToGo(input, "", true, false, false)
 	if output.Error != "" {
 		log.Fatal(fmt.Println(output.Error))
 	}
+	// go fmt the generated go struct
 	formatted, err := goformat.Source([]byte(output.Go))
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Print(formatted)
+	// print the result on stdout
+	fmt.Print(string(formatted))
 }
