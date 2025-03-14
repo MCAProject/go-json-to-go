@@ -6,7 +6,7 @@ Translates JSON into a Go type definition.
 
 Things to note:
 
-- Ths code sometimes has to make some assumptions, so give the output a once-over.
+- This code sometimes has to make some assumptions, so give the output a once-over.
 - In an array of objects, it is assumed that the first object is representative of the rest of them.
 
 Contributions are welcome! Open a pull request to fix a bug, or open an issue to discuss a new feature or change.
