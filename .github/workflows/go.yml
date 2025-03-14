@@ -27,16 +27,6 @@ jobs:
     - name: Test sample
       run: ./jsontogo sample.json
 
-    - name: Run json-to-go using stdin
-      shell: bash
-      run: |
-        set -eEuo pipefail
-        ls -al ./jsontogo tests/double-nested-objects.json
-        got=$(cat tests/double-nested-objects.json | ./jsontogo)
-        exp=$(cat tests/double-nested-objects.go)
-        echo "got: '${got}'"
-        [[ "${got}" == "${exp}" ]]
-
     - name: Run json-to-go with a file
       shell: bash
       run: |
@@ -55,3 +45,14 @@ jobs:
       shell: bash
       run: |
         ! ./jsontogo <(echo "error")
+
+    - name: Run json-to-go using stdin
+      shell: bash
+      run: |
+        set -eEuo pipefail
+        ls -al ./jsontogo tests/double-nested-objects.json
+        got=$(cat tests/double-nested-objects.json | ./jsontogo)
+        exp=$(cat tests/double-nested-objects.go)
+        echo "got: '${got}'"
+        [[ "${got}" == "${exp}" ]]
+        
